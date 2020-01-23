@@ -169,7 +169,28 @@ void LinkedList::new_sort() { //selection sort
 
 void LinkedList::removeAll(int k) {
 //You need to implement this function.
-    return;
+    while (true) {
+        if (!head) return;//if 0 node in the linked list
+        Node *p1 = head, *p2, *p3;
+        if (head->value == k) {
+            head = head->next;
+            delete p1;
+            continue;
+        }
+        p2 = p1->next;
+        while (p2) {
+            if (p2->value == k) {
+                p1->next = p2->next;
+                p3 = p2;
+                delete p3;
+                p2 = p2->next;
+                continue;
+            }
+            p1 = p2;
+            p2 = p2->next;
+        }
+        break;
+    }
 }
 
 //Different test cases will be used during grading
@@ -179,7 +200,7 @@ void LinkedList::removeAll(int k) {
 
 int main() {
     LinkedList L1;
-    L1.makeList(12, 60);
+    L1.makeList(9, 60);
     L1.printList();
     L1.new_reverse();
     L1.printList();
