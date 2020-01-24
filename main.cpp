@@ -75,97 +75,45 @@ void LinkedList::new_reverse() {
 
 }
 void LinkedList::new_sort() { //selection sort
-//You need to implement this function.
     if (!head || !head->next) return;//if 0 or 1 node, return;
-    Node* p1 = head, * p2, * p3, *p4;
-    int min, cMin = -1, count;
-    Node* p_min = nullptr, *cP_min = nullptr;
-    bool skip = false;
-   // while(unsorted) {
-        while (p1) { //find min value
-            min = p1->value;
-            p_min = p1;
-            p2 = p1->next;
-            while (p2) {
-                if (p2->value < min) {
-                    min = p2->value;
-                    p_min = p2;
-                }
-                p2 = p2->next;
+    Node *p1 = head, *p2, *prev, *oneBefore, *lastMin;
+    int min;
+    bool firstMin = true;
+    Node *p_min;
+    while (p1) {
+        min = p1->value;
+        p_min = p1;
+        prev = p1;
+        p2 = p1->next;
+        while (p2) {
+            if (p2->value <= min) {
+                oneBefore = prev;
+                min = p2->value;
+                p_min = p2;
             }
-            cMin = min; //set current min
-            cP_min = p_min; //current pointer min
-            break;
+            prev = prev->next;
+            p2 = p2->next;
         }
-        if(cP_min != head){
-            p3 = head;
-            head = cP_min;
-            cP_min->next = p3;
-            count = 0;
-            p1 = head;
-            while (p1) {
-                if (p1->next == cP_min->next) {
-                    p1->next = nullptr;
-                    break;
-                }
-                p1 = p1->next;
-            }
-        }
-//        p3 = head;
-//        head = p_min;
-//        head->next = p3;
+        if (p_min == head && firstMin) {
+            firstMin = false;
+        } else if (p_min != head && firstMin) {
+            oneBefore->next = p_min->next;
+            p_min->next = head;
+            head = p_min;
+            firstMin = false;
 
-        p1 = head->next;
-        while (cP_min->next) {
-            min = p1->value;
-            if (cMin == min) {
-                p1 = p1->next;
-                continue;
-            }
-            p_min = p1;
-            p2 = p1->next;
-            while (p2) {
-                if (p2->value < min && p2->value >= cMin) {
-                    min = p2->value;
-                    p_min = p2;
-                }
-                p2 = p2->next;
-            }
+        } else if (lastMin->next == p_min) { //already in place
 
-            if (cP_min->next != p_min ){ //not already pointing to next value
-                if (p_min->next != nullptr) { //not pointing to null
-                    p3 = p_min->next;
+        } else if (!firstMin) {
+            oneBefore->next = p_min->next;
+            p_min->next = lastMin->next;
+            lastMin->next = p_min;
+        }
+        lastMin = p_min;
+        p1 = lastMin->next;
 
-                    while (p3->next) {
-                        p3 = p3->next;
-                    }
-                    p4 = cP_min->next;
-                    p3->next = p4;
-                }
-                else {
-                    p3 = p_min;
-                    p4 = cP_min->next;
-                    p3->next = p4;
-                }
-            cP_min->next = p_min;
-            //p_min = p_min->next;
-            p1 = head;
-            count = 0;
-            while (p1) {
-                if (p1->next == cP_min->next && count++ == 1) {
-                    p1->next = nullptr;
-                    break;
-                }
-                p1 = p1->next;
-            }
-        }
-            cMin = min;
-            cP_min = p_min;
-            p2 = p_min;
-            p1 = p2->next;
-        }
     }
-//}
+}
 
 void LinkedList::removeAll(int k) {
 //You need to implement this function.
@@ -200,13 +148,13 @@ void LinkedList::removeAll(int k) {
 
 int main() {
     LinkedList L1;
-    L1.makeList(9, 60);
+    L1.makeList(12, 60);
     L1.printList();
     L1.new_reverse();
     L1.printList();
     L1.new_sort();
     L1.printList();
-    L1.removeAll(38);
+    L1.removeAll(49);
     L1.printList();
     return 0;
 }
